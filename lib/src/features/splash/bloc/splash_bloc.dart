@@ -7,9 +7,11 @@ part 'splash_state.dart';
 
 @injectable
 final class SplashBloc extends Bloc<SplashEvent, SplashState> {
-  SplashBloc() : super(SplashInitial()) {
-    on<SplashEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+  SplashBloc() : super(SplashInitialState()) {
+    on<SplashCheckStartedEvent>(_check);
+  }
+
+  Future<void> _check(SplashCheckStartedEvent event, Emitter<SplashState> emit) async {
+    emit(SplashCheckingState());
   }
 }

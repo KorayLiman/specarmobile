@@ -10,7 +10,7 @@ final class SplashView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<SplashBloc>(),
+      create: (context) => getIt<SplashBloc>()..add(const SplashCheckStartedEvent()),
       child: const Scaffold(
         body: _Body(),
       ),
@@ -24,6 +24,7 @@ final class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final w = context.watch<SplashBloc>();
     return const Center(
       child: Text('Splash'),
     );

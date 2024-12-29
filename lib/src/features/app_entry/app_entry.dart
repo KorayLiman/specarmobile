@@ -12,25 +12,22 @@ final class SpeCarApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _SpeCarAppEntyMultiBlocProvider(
-      builder: (context) {
-        return MaterialApp.router(
-          routerConfig: router,
-          debugShowCheckedModeBanner: false,
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: Constants.localizationConstants.supportedLocales,
-          builder: (context, child) {
-            return _SpeCarAppEntryMultiBlocListener(
-              builder: (context) {
-                return child!;
-              },
-            );
-          },
-        );
+    return MaterialApp.router(
+      routerConfig: router,
+      debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: Constants.localizationConstants.supportedLocales,
+      builder: (context, child) {
+        return child!;
+        // return _SpeCarAppEntryMultiBlocListener(
+        //   builder: (context) {
+        //     return child!;
+        //   },
+        // );
       },
     );
   }
