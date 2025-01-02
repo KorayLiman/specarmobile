@@ -18,6 +18,8 @@ final class NetworkManager extends FLNetworkManager {
             RequestErrorLogInterceptor(),
           ],
           printLogRequestInfo: true,
+          printLogErrorResponseInfo: true,
+          printLogResponseInfo: true,
         );
 
   final INetworkManagerRepository _networkManagerRepository;
