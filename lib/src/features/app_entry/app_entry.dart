@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:specarmobile/src/common/common.dart';
+import 'package:specarmobile/src/features/localization/bloc/localization_bloc.dart';
+import 'package:specarmobile/src/features/network/network.dart';
 
 part 'multi_bloc_listener.dart';
 part 'multi_bloc_provider.dart';
@@ -12,23 +14,22 @@ final class SpeCarApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: router,
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: Constants.localizationConstants.supportedLocales,
-      builder: (context, child) {
-        return child!;
-        // return _SpeCarAppEntryMultiBlocListener(
-        //   builder: (context) {
-        //     return child!;
-        //   },
-        // );
-      },
+    return _SpeCarAppEntyMultiBlocProvider(
+      builder: (context) => MaterialApp.router(
+        routerConfig: getIt<ISPRouterService>().rootRouter,
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: Constants.localizationConstants.supportedLocales,
+        builder: (context, child) {
+          return _SpeCarAppEntryMultiBlocListener(
+            builder: (context) => child!,
+          );
+        },
+      ),
     );
   }
 }

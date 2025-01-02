@@ -9,7 +9,13 @@ final class _SpeCarAppEntyMultiBlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: const [],
+      providers: [
+        BlocProvider(create: (context) => getIt<NetworkManagerBloc>()..add(const NetworkManagerInitializedEvent())),
+        BlocProvider(
+          create: (context) => getIt<LocalizationBloc>()..add(const LocalizationInitializedEvent()),
+          lazy: false,
+        ),
+      ],
       child: Builder(builder: builder),
     );
   }

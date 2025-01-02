@@ -1,14 +1,15 @@
 import 'package:flcore/flcore.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:specarmobile/src/common/constants/constants.dart';
-import 'package:specarmobile/src/common/network/base_response.dart';
-import 'package:specarmobile/src/common/network/interceptors/request_error_log_interceptor.dart';
+import 'package:specarmobile/src/common/common.dart';
+import 'package:specarmobile/src/features/localization/bloc/localization_bloc.dart';
+import 'package:specarmobile/src/features/network/network.dart';
 
 typedef ValidateStatus = bool Function(int? statusCode);
 
 @lazySingleton
 final class NetworkManager extends FLNetworkManager {
-  NetworkManager()
+  NetworkManager(this._networkManagerRepository, this._routerService)
       : super(
           baseOptions: BaseOptions(
             baseUrl: Constants.networkConstants.baseUrl,
@@ -18,6 +19,9 @@ final class NetworkManager extends FLNetworkManager {
           ],
           printLogRequestInfo: true,
         );
+
+  final INetworkManagerRepository _networkManagerRepository;
+  final ISPRouterService _routerService;
 
   @override
   Future<BaseResponse<T>> request<T, M extends BaseModel<dynamic>>({
@@ -103,6 +107,15 @@ final class NetworkManager extends FLNetworkManager {
 
   @override
   Map<String, dynamic> generateHeaders({required BaseRequestPath path}) {
+    final navigatorContext = _routerService.rootNavigatorKey.currentContext;
+    if (navigatorContext != null) {
+      final selectedLanguageName = navigatorContext.read<LocalizationBloc>().state.selectedCulture?.name;
+      if (selectedLanguageName != null) {
+        return <String, dynamic>{
+          'Accept-Language': selectedLanguageName,
+        };
+      }
+    }
     return <String, dynamic>{};
     // String? token() => _authRepository.getUserCredentials()?.accessToken;
 
@@ -150,25 +163,30 @@ final class NetworkManager extends FLNetworkManager {
     }
 
     final succeeded = response.data?['succeeded'] as bool?;
-    final messagesList = response.data?['messages'] as List?;
-    List<Message>? messages;
-    if (messagesList.isNotNullAndNotEmpty) {
-      messages = messagesList!.cast<Map<String, dynamic>>().map(Message.fromJson).toList();
-    }
+    final messageAsMap = response.data?['message'] as Map<String, dynamic>?;
+    final message = messageAsMap != null ? Message.fromJson(messageAsMap) : null;
     final statusCode = response.statusCode;
 
-    return BaseResponse<T>(data: data, succeeded: succeeded, messages: messages, statusCode: statusCode);
+    if (message != null) _networkManagerRepository.addMessage(message);
+
+    return BaseResponse<T>(data: data, succeeded: succeeded, message: message, statusCode: statusCode);
   }
 
   @override
   BaseResponse<T> getErrorResponse<T>({required Object error}) {
-    final statusCode = error is DioException ? error.response?.statusCode : null;
-    List<dynamic>? messagesList;
-    if (error is DioException && error.response?.data is Map<String, dynamic>) {
-      messagesList = (error.response?.data as Map<String, dynamic>)['messages'] as List?;
-    }
-    final messages = messagesList?.cast<Map<String, dynamic>>().map(Message.fromJson).toList();
+    try{
+      final statusCode = error is DioException ? error.response?.statusCode : null;
 
-    return BaseResponse<T>(statusCode: statusCode, error: error, messages: messages);
+    Message? message;
+    if (error is DioException && error.response?.data is Map<String, dynamic> && (error.response?.data as Map<String, dynamic>)['message'] is Map<String, dynamic>) {
+      message = Message.fromJson((error.response?.data as Map<String, dynamic>)['message'] as Map<String, dynamic>);
+    }
+
+    if (message != null) _networkManagerRepository.addMessage(message);
+    return BaseResponse<T>(statusCode: statusCode, message: message ?? Message(type: MessageType.error, content: [error.toString()]));
+    }
+    catch(e){
+      throw Exception('Error in getErrorResponse method: $e');
+    }
   }
 }

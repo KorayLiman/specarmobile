@@ -7,6 +7,7 @@ sealed class SplashEvent extends Equatable {
   List<Object> get props => [];
 }
 
+@immutable
 final class SplashCheckStartedEvent extends SplashEvent {
   const SplashCheckStartedEvent();
 }

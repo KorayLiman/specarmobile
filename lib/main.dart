@@ -6,8 +6,8 @@ import 'package:flcore/flcore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:specarmobile/firebase_options.dart';
 import 'package:specarmobile/src/common/common.dart';
+import 'package:specarmobile/src/common/gen/firebase_options.dart';
 import 'package:specarmobile/src/features/app_entry/app_entry.dart';
 
 void main() {
@@ -33,14 +33,25 @@ Future<void> preConfigure({bool isTestMode = false}) async {
       DeviceOrientation.portraitDown,
     ]),
   );
-  HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: await FLPathProvider().getApplicationDocumentsDirectory(),
-  );
+
   configureDependencies();
+  _configureExternalDependencies();
+
   Bloc.observer = SPBlocObserver();
+
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: await getIt<IFLPathProvider>().getApplicationDocumentsDirectory(),
+  );
   await Future.wait([
-    FLCore().initialize(),
+    getIt<IFLCore>().initialize(),
     Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
   ]);
   _isConfigured = true;
+}
+
+void _configureExternalDependencies() {
+  getIt
+    ..registerLazySingleton<IFLCore>(FLCore.new)
+    ..registerLazySingleton<IFLPathProvider>(FLPathProvider.new)
+    ..registerLazySingleton<IFLLogger>(() => FLLogger(logName: 'SpeCar'));
 }

@@ -1,12 +1,15 @@
 import 'package:flcore/flcore.dart';
 
+const _appVersionPath = '/AppVersion';
+const _resourcesPath = '/Resources';
+
 enum RequestPaths implements BaseRequestPath {
-  appVersion('appVersion'),
+  getUpdateAvailable('$_appVersionPath/getUpdateAvailable'),
+  cultures('$_resourcesPath/cultures'),
   ;
 
   const RequestPaths(this.value);
   final String value;
-
 
   @override
   String get asString => value;
