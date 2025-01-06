@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flcore/flcore.dart';
@@ -25,11 +27,13 @@ final class SplashBloc extends Bloc<SplashEvent, SplashState> {
     try {
       final isUpdateRequired = await _getIsUpdateRequired();
       if (isUpdateRequired) {
-        emit(const SplashErrorState(error: 'First upload android and iOS apps to the stores and test the update functionality'));
-        // emit(const SplashUpdateRequiredState());
+        emit(const SplashUpdateRequiredState());
         return;
       }
-    } catch (e) {}
+    } catch (e) {
+      emit(SplashErrorState(error: e.toString()));
+      return;
+    }
   }
 
   Future<bool> _getIsUpdateRequired() async {
@@ -37,6 +41,7 @@ final class SplashBloc extends Bloc<SplashEvent, SplashState> {
     final platform = AppPlatform.fromPlatform;
     final updateInfoCommand = GetUpdateInfoCommand(appPlatform: platform, version: version);
     final updateInfo = await _splashRepository.getUpdateAvailable(updateInfoCommand: updateInfoCommand);
+    if (updateInfo.data == null) throw Exception(updateInfo.message?.content.toString() ?? 'An error occurred while checking for updates (Version control data was null)');
     return updateInfo.data?.isForceUpdate ?? false;
   }
 }
