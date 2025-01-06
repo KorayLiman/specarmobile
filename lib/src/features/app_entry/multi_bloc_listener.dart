@@ -22,44 +22,31 @@ final class _SpeCarAppEntryMultiBlocListener extends StatelessWidget {
 BlocListener<NetworkManagerBloc, NetworkManagerState> _networkManagerBlocListener() {
   final rootNavigatorKey = getIt<ISPRouterService>().rootNavigatorKey;
   final popupManager = getIt<ISPPopupManager>();
+  final overlayManager = getIt<ISPOverlayManager>();
   return BlocListener<NetworkManagerBloc, NetworkManagerState>(
     listener: (context, state) {
       if (state is NetworkManagerHasMessageState) {
         final navigatorContext = rootNavigatorKey.currentContext;
         if (navigatorContext == null) return;
 
-        switch (state.message.type) {
-          case MessageType.error:
-            popupManager.dialogs.showErrorDialog(
-              message: state.message,
-              context: navigatorContext,
-            );
-          default:
-            break;
+        if (state.message.type == MessageType.error) {
+          popupManager.dialogs.showErrorDialog(
+            message: state.message.content.join('\n'),
+            context: navigatorContext,
+          );
+        } else {
+          final toastType = switch (state.message.type) {
+            MessageType.success => ToastType.success,
+            MessageType.error => ToastType.error,
+            MessageType.warning => ToastType.warning,
+            MessageType.info => ToastType.info,
+          };
+          overlayManager.showToast(
+            message: state.message.content.join('\n'),
+            type: toastType,
+          );
         }
       }
-
-      // if (state.baseResponse == null) return;
-      // if (state.baseResponse?.statusCode == 503) return; // ServiceUnavailableBloc will handle this
-      // final baseResponse = state.baseResponse!;
-
-      // if (state is NetworkManagerSuccessState && (baseResponse.message.isNotNullAndNotEmpty)) {
-      //   RZToasts.success(baseResponse.message);
-      // } else if (state is NetworkManagerErrorState) {
-      //   String? errorMessage;
-
-      //   if (state.baseResponse?.error is DioException) {
-      //     final creatingErrorMessageFromDioException = CreatingErrorMessageFromDioException(state.baseResponse!.error! as DioException);
-      //     errorMessage = creatingErrorMessageFromDioException.message;
-      //   }
-
-      //   errorMessage = baseResponse.message ?? errorMessage ?? LocalizationKey.unknownErrorOccured.value;
-
-      //   RZDialogs.showErrorMessageDialog(
-      //     message: errorMessage,
-      //     context: rootNavigatorKey.currentContext!,
-      //   );
-      // }
     },
   );
 }

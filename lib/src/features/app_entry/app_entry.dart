@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:specarmobile/src/common/common.dart';
 import 'package:specarmobile/src/features/localization/bloc/localization_bloc.dart';
 import 'package:specarmobile/src/features/network/network.dart';
+import 'package:specarmobile/src/features/theme/bloc/theme_bloc.dart';
 
 part 'multi_bloc_listener.dart';
 part 'multi_bloc_provider.dart';
@@ -24,6 +25,7 @@ final class SpeCarApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: Constants.localizationConstants.supportedLocales,
+        theme: context.watch<ThemeBloc>().state.theme,
         builder: (context, child) {
           return _SpeCarAppEntryMultiBlocListener(
             builder: (context) => child!,

@@ -11,6 +11,7 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:specarmobile/src/common/common.dart' as _i737;
+import 'package:specarmobile/src/common/overlay/overlay_manager.dart' as _i635;
 import 'package:specarmobile/src/common/popup/popup_manager.dart' as _i962;
 import 'package:specarmobile/src/common/router/router.dart' as _i154;
 import 'package:specarmobile/src/features/localization/bloc/localization_bloc.dart'
@@ -32,6 +33,7 @@ import 'package:specarmobile/src/features/splash/data/data_source/remote/splash_
     as _i996;
 import 'package:specarmobile/src/features/splash/domain/splash_repository.dart'
     as _i340;
+import 'package:specarmobile/src/features/theme/bloc/theme_bloc.dart' as _i118;
 
 extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -44,6 +46,7 @@ extension GetItInjectableX on _i174.GetIt {
       environment,
       environmentFilter,
     );
+    gh.factory<_i118.ThemeBloc>(() => _i118.ThemeBloc());
     gh.lazySingleton<_i794.INetworkManagerRepository>(
         () => _i794.NetworkManagerRepository());
     gh.factory<_i996.ISplashRemoteDS>(() => _i996.SplashRemoteDS());
@@ -51,6 +54,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i154.ISPRouterService>(() => _i154.SPRouterService());
     gh.lazySingleton<_i962.ISPPopupManager>(
         () => _i962.SPPopupManager(gh<_i737.ISPRouterService>()));
+    gh.lazySingleton<_i635.ISPOverlayManager>(
+        () => _i635.SPOverlayManager(gh<_i737.ISPRouterService>()));
     gh.lazySingleton<_i588.NetworkManager>(() => _i588.NetworkManager(
           gh<_i462.INetworkManagerRepository>(),
           gh<_i737.ISPRouterService>(),

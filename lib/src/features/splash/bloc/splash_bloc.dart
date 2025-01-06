@@ -12,7 +12,7 @@ part 'splash_state.dart';
 
 @injectable
 final class SplashBloc extends Bloc<SplashEvent, SplashState> {
-  SplashBloc(this._splashRepository) : super(SplashInitialState()) {
+  SplashBloc(this._splashRepository) : super(const SplashInitialState()) {
     on<SplashCheckStartedEvent>(_check);
   }
 
@@ -20,17 +20,23 @@ final class SplashBloc extends Bloc<SplashEvent, SplashState> {
   final _packageInfo = FLPackageInfo();
 
   Future<void> _check(SplashCheckStartedEvent event, Emitter<SplashState> emit) async {
-    emit(SplashCheckingState());
+    emit(const SplashCheckingState());
 
     try {
-      await _checkForUpdate();
+      final isUpdateRequired = await _getIsUpdateRequired();
+      if (isUpdateRequired) {
+        emit(const SplashErrorState(error: 'First upload android and iOS apps to the stores and test the update functionality'));
+        // emit(const SplashUpdateRequiredState());
+        return;
+      }
     } catch (e) {}
   }
 
-  Future<void> _checkForUpdate() async {
+  Future<bool> _getIsUpdateRequired() async {
     final version = await _packageInfo.getVersion();
     final platform = AppPlatform.fromPlatform;
     final updateInfoCommand = GetUpdateInfoCommand(appPlatform: platform, version: version);
-    final isUpdateAvailable = await _splashRepository.getUpdateAvailable(updateInfoCommand: updateInfoCommand);
+    final updateInfo = await _splashRepository.getUpdateAvailable(updateInfoCommand: updateInfoCommand);
+    return updateInfo.data?.isForceUpdate ?? false;
   }
 }

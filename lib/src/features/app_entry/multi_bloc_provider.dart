@@ -15,6 +15,7 @@ final class _SpeCarAppEntyMultiBlocProvider extends StatelessWidget {
           create: (context) => getIt<LocalizationBloc>()..add(const LocalizationInitializedEvent()),
           lazy: false,
         ),
+        BlocProvider(create: (context) => getIt<ThemeBloc>()),
       ],
       child: Builder(builder: builder),
     );

@@ -176,18 +176,17 @@ final class NetworkManager extends FLNetworkManager {
 
   @override
   BaseResponse<T> getErrorResponse<T>({required Object error}) {
-    try{
+    try {
       final statusCode = error is DioException ? error.response?.statusCode : null;
 
-    Message? message;
-    if (error is DioException && error.response?.data is Map<String, dynamic> && (error.response?.data as Map<String, dynamic>)['message'] is Map<String, dynamic>) {
-      message = Message.fromJson((error.response?.data as Map<String, dynamic>)['message'] as Map<String, dynamic>);
-    }
-
-    if (message != null) _networkManagerRepository.addMessage(message);
-    return BaseResponse<T>(statusCode: statusCode, message: message ?? Message(type: MessageType.error, content: [error.toString()]));
-    }
-    catch(e){
+      Message? message;
+      if (error is DioException && error.response?.data is Map<String, dynamic> && (error.response?.data as Map<String, dynamic>)['message'] is Map<String, dynamic>) {
+        message = Message.fromJson((error.response?.data as Map<String, dynamic>)['message'] as Map<String, dynamic>);
+      }
+      message ??= Message(type: MessageType.error, content: [error.toString()]);
+      _networkManagerRepository.addMessage(message);
+      return BaseResponse<T>(statusCode: statusCode, message: message);
+    } catch (e) {
       throw Exception('Error in getErrorResponse method: $e');
     }
   }

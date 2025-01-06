@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:specarmobile/src/common/di/configuration.dart';
+import 'package:specarmobile/src/common/common.dart';
+import 'package:specarmobile/src/common/gen/assets.gen.dart';
 import 'package:specarmobile/src/features/splash/bloc/splash_bloc.dart';
 
 @immutable
@@ -24,9 +25,56 @@ final class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final w = context.watch<SplashBloc>();
-    return const Center(
-      child: Text('Splash'),
+    final state = context.watch<SplashBloc>().state;
+    return switch (state) {
+      SplashErrorState _ => const _SplashError(),
+      _ => const _SplashProcessing(),
+    };
+  }
+}
+
+@immutable
+final class _SplashError extends StatelessWidget {
+  const _SplashError();
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(Assets.images.specarIntroCar.path),
+                  const Text('An error occurred'),
+                ],
+              ),
+            ),
+            const SPFilledButton(
+              child: Text('Retry'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+@immutable
+final class _SplashProcessing extends StatelessWidget {
+  const _SplashProcessing();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<SplashBloc, SplashState>(
+      listener: (context, state) {
+        if (state is SplashUpdateRequiredState) getIt<ISPPopupManager>().dialogs.showForceUpdateDialog(context: context);
+      },
+      child: const Center(child: CircularProgressIndicator()),
     );
   }
 }
