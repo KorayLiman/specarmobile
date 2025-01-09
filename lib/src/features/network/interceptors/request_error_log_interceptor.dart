@@ -5,13 +5,15 @@ final class RequestErrorLogInterceptor extends InterceptorsWrapper {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     _logError(err);
-
     super.onError(err, handler);
   }
 
   Future<void> _logError(DioException err) async {
+    final statusCode = err.response?.statusCode;
+
+    if (statusCode != null && statusCode < 500) return;
+
     final url = err.requestOptions.uri.toString();
-    final statusCode = err.response?.statusCode.toString();
     final requestData = err.requestOptions.data.toString();
     final requestHeader = err.requestOptions.headers.toString();
     final requestMethod = err.requestOptions.method;

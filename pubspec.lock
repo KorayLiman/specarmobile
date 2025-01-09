@@ -371,7 +371,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "49d7f45d3acc956b7a670ddad7575140fafaad39"
+      resolved-ref: e5e1e3828aa0a3e34e4e51c77463c611f0e37f10
       url: "git@github.com:KorayLiman/Flutter-Core.git"
     source: git
     version: "0.0.1"
