@@ -31,6 +31,7 @@ final class NetworkConstants {
 @immutable
 final class PackageConstants {
   const PackageConstants._();
+  String get appName => 'SpeCar';
   String get packageName => 'com.kry.specarmobile';
 }
 

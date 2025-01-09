@@ -56,8 +56,8 @@ final class _SplashError extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(Assets.images.specarIntroCar.path),
-                const FLText.displayMedium(
-                  'SpeCar',
+                 FLText.displayMedium(
+                  Constants.packageConstants.appName,
                   textAlign: TextAlign.center,
                   fontWeight: FontWeight.bold,
                 ),
@@ -98,8 +98,8 @@ final class _SplashProcessing extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(Assets.images.specarIntroCar.path),
-            const FLText.displayMedium(
-              'SpeCar',
+             FLText.displayMedium(
+              Constants.packageConstants.appName,
               textAlign: TextAlign.center,
               fontWeight: FontWeight.bold,
             ),

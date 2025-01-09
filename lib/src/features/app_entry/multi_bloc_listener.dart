@@ -11,6 +11,7 @@ final class _SpeCarAppEntryMultiBlocListener extends StatelessWidget {
     return MultiBlocListener(
       listeners: [
         _networkManagerBlocListener(),
+        _authBlocListener(),
       ],
       child: Builder(
         builder: builder,
@@ -46,6 +47,19 @@ BlocListener<NetworkManagerBloc, NetworkManagerState> _networkManagerBlocListene
             type: toastType,
           );
         }
+      }
+    },
+  );
+}
+
+BlocListener<AuthBloc, AuthState> _authBlocListener() {
+  final routerService = getIt<ISPRouterService>();
+
+  return BlocListener<AuthBloc, AuthState>(
+    listenWhen: (previous, current) => previous.authenticationStatus != current.authenticationStatus,
+    listener: (context, state) {
+      if (state.authenticationStatus == AuthenticationStatus.unauthenticated) {
+        routerService.rootRouter.refresh();
       }
     },
   );

@@ -9,7 +9,7 @@ abstract interface class ILocalizationRemoteDS {
 }
 
 @Injectable(as: ILocalizationRemoteDS)
-final class LocalizationRemoteDS extends BaseRemoteDs implements ILocalizationRemoteDS {
+final class LocalizationRemoteDS extends BaseRemoteDS implements ILocalizationRemoteDS {
   LocalizationRemoteDS();
 
   @override

@@ -16,6 +16,7 @@ final class _SpeCarAppEntyMultiBlocProvider extends StatelessWidget {
           lazy: false,
         ),
         BlocProvider(create: (context) => getIt<ThemeBloc>()),
+        BlocProvider(create: (context) => getIt<AuthBloc>()),
       ],
       child: Builder(builder: builder),
     );

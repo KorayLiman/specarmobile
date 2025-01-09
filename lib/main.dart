@@ -53,5 +53,5 @@ void _configureExternalDependencies() {
   getIt
     ..registerLazySingleton<IFLCore>(FLCore.new)
     ..registerLazySingleton<IFLPathProvider>(FLPathProvider.new)
-    ..registerLazySingleton<IFLLogger>(() => FLLogger(logName: 'SpeCar'));
+    ..registerLazySingleton<IFLLogger>(() => FLLogger(logName: Constants.packageConstants.appName));
 }

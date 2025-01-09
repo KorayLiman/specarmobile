@@ -11,7 +11,7 @@ abstract mixin class ISplashRemoteDS {
 }
 
 @Injectable(as: ISplashRemoteDS)
-final class SplashRemoteDS extends BaseRemoteDs with ISplashRemoteDS {
+final class SplashRemoteDS extends BaseRemoteDS with ISplashRemoteDS {
   SplashRemoteDS();
 
   @override

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 import 'package:specarmobile/src/common/common.dart';
+import 'package:specarmobile/src/features/maintenance_mode/presentation/maintenance_mode_view.dart';
 import 'package:specarmobile/src/features/splash/presentation/splash_view.dart';
 
 abstract interface class ISPRouterService {
@@ -26,7 +27,17 @@ final class SPRouterService implements ISPRouterService {
           child: SplashView(),
         ),
       ),
+
+      /// Maintenance Mode Route
+      GoRoute(
+        path: RoutePaths.maintenanceMode.asRoutePath,
+        name: RoutePaths.maintenanceMode.name,
+        builder: (context, state) => const MaintenanceModeView(),
+      ),
     ],
+    redirect: (context, state) {
+      return null;
+    },
   );
 
   @override

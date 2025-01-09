@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flcore/flcore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
@@ -142,7 +144,20 @@ final class NetworkManager extends FLNetworkManager {
   }
 
   @override
-  void onServiceUnavailable(DioException error) {}
+  void onServiceUnavailable(DioException error) {
+    Message? message;
+
+    try {
+      if (error.response?.data is Map<String, dynamic> && (error.response!.data as Map<String, dynamic>)['message'] is Map<String, dynamic>) {
+        final messageMap = (error.response!.data as Map<String, dynamic>)['message']as Map<String, dynamic>?;
+        message = messageMap != null ? Message.fromJson(messageMap) : null;
+      }
+    } catch (e) {
+      message = Message(type: MessageType.error, content: [error.toString()]);
+    }
+
+    _routerService.rootRouter.goNamed(RoutePaths.maintenanceMode.name, extra: message?.content.firstOrNull ?? error.toString());
+  }
 
   @override
   BaseResponse<T> getSuccessPrimitiveResponse<T>({required Response<T> response}) => BaseResponse(data: response.data, succeeded: true, statusCode: response.statusCode);
@@ -169,7 +184,7 @@ final class NetworkManager extends FLNetworkManager {
     final message = messageAsMap != null ? Message.fromJson(messageAsMap) : null;
     final statusCode = response.statusCode;
 
-    if (message != null) _networkManagerRepository.addMessage(message);
+    if (message != null && statusCode != HttpStatus.serviceUnavailable) _networkManagerRepository.addMessage(message);
 
     return BaseResponse<T>(data: data, succeeded: succeeded, message: message, statusCode: statusCode);
   }
@@ -184,7 +199,8 @@ final class NetworkManager extends FLNetworkManager {
         message = Message.fromJson((error.response?.data as Map<String, dynamic>)['message'] as Map<String, dynamic>);
       }
       message ??= Message(type: MessageType.error, content: [error.toString()]);
-      _networkManagerRepository.addMessage(message);
+
+      if (statusCode != HttpStatus.serviceUnavailable) _networkManagerRepository.addMessage(message);
       return BaseResponse<T>(statusCode: statusCode, message: message);
     } catch (e) {
       throw Exception('Error in getErrorResponse method: $e');
