@@ -30,7 +30,7 @@ final class _SPDialogs {
       context,
       id: _errorMessageDialogId,
       title: FLText.titleMedium(
-        LocalizationKey.errorMessageDialogTitle.tr(context, listen: false),
+        LocalizationKey.errorMessageDialogTitle.tr(context, listen: false, placeholder: 'Error'),
         fontWeight: FontWeight.bold,
       ),
       content: FLText.bodyMedium(message),
@@ -44,7 +44,6 @@ final class _SPDialogs {
       title: LocalizationKey.forceUpdateDialogTitle.tr(context, listen: false),
       message: LocalizationKey.forceUpdateDialogMessage.tr(context, listen: false),
       androidPackageName: Constants.packageConstants.packageName,
-      
     );
   }
 }
