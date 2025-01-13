@@ -30,4 +30,3 @@ final class TokenDto extends BaseModel<TokenDto> {
   @override
   TokenDto fromJson(Map<String, dynamic> json) => TokenDto.fromJson(json);
 }
-

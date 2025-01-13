@@ -40,7 +40,7 @@ Future<void> preConfigure({bool isTestMode = false}) async {
   Bloc.observer = SPBlocObserver();
 
   HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: await getIt<IFLPathProvider>().getApplicationDocumentsDirectory(),
+    storageDirectory:  HydratedStorageDirectory((await getIt<IFLPathProvider>().getApplicationDocumentsDirectory()).path),
   );
   await Future.wait([
     getIt<IFLCore>().initialize(),

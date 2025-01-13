@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 import 'package:specarmobile/src/common/common.dart';
+import 'package:specarmobile/src/features/home/presentation/home_view.dart';
 import 'package:specarmobile/src/features/maintenance_mode/presentation/maintenance_mode_view.dart';
 import 'package:specarmobile/src/features/splash/presentation/splash_view.dart';
 
@@ -33,6 +34,15 @@ final class SPRouterService implements ISPRouterService {
         path: RoutePaths.maintenanceMode.asRoutePath,
         name: RoutePaths.maintenanceMode.name,
         builder: (context, state) => const MaintenanceModeView(),
+      ),
+
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => HomeView(
+          navigationShell: navigationShell,
+        ),
+        branches: const [
+         
+        ],
       ),
     ],
     redirect: (context, state) {
