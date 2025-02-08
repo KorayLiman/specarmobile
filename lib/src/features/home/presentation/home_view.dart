@@ -25,6 +25,7 @@ final class _BottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      currentIndex: navigationShell.currentIndex,
       onTap: (index) {
         if (index != navigationShell.currentIndex) {
           navigationShell.goBranch(index);
@@ -33,7 +34,7 @@ final class _BottomNavigationBar extends StatelessWidget {
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          label: 'Home',
+          label: 'Dashboard',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.settings),

@@ -24,8 +24,8 @@ final class LocalizationConstants {
 @immutable
 final class NetworkConstants {
   const NetworkConstants._();
-  // String get baseUrl => 'https://specar.site/api';
-  String get baseUrl => 'http://localhost:5002/api';
+  String get baseUrl => 'https://api.specar.site/api';
+
 }
 
 @immutable

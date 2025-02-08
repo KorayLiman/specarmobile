@@ -9,13 +9,14 @@ import 'package:specarmobile/src/features/auth/data/models/user_credentials.dart
 import 'package:specarmobile/src/features/network/base_response.dart';
 
 abstract interface class IAuthRepository {
+  Stream<AuthState> get authState;
   Future<BaseResponse<TokenDto>> guestLogin();
   void changeAuthState({required AuthState authState});
   Future<bool> setUserCredentials({required SPUserCredentials userCredentials});
   SPUserCredentials? getUserCredentials();
 }
 
-@Injectable(as: IAuthRepository)
+@LazySingleton(as: IAuthRepository)
 final class AuthRepository implements IAuthRepository {
   AuthRepository(this._authRemoteDS, this._authLocalDS);
 
@@ -26,6 +27,7 @@ final class AuthRepository implements IAuthRepository {
   @override
   Future<BaseResponse<TokenDto>> guestLogin() => _authRemoteDS.guestLogin();
 
+  @override
   Stream<AuthState> get authState async* {
     yield* _authStateStreamController.stream;
   }

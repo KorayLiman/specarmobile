@@ -58,7 +58,9 @@ BlocListener<AuthBloc, AuthState> _authBlocListener() {
   return BlocListener<AuthBloc, AuthState>(
     listenWhen: (previous, current) => previous.authenticationStatus != current.authenticationStatus,
     listener: (context, state) {
-      if (state.authenticationStatus == AuthenticationStatus.unauthenticated) {
+      if (state.authenticationStatus == AuthenticationStatus.authenticated) {
+        routerService.rootRouter.goNamed(RoutePaths.dashboard.name);
+      } else if (state.authenticationStatus == AuthenticationStatus.unauthenticated) {
         routerService.rootRouter.refresh();
       }
     },

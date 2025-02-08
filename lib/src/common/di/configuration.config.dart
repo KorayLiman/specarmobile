@@ -56,7 +56,6 @@ extension GetItInjectableX on _i174.GetIt {
       environment,
       environmentFilter,
     );
-    gh.factory<_i815.AuthBloc>(() => _i815.AuthBloc());
     gh.factory<_i118.ThemeBloc>(() => _i118.ThemeBloc());
     gh.factory<_i255.IAuthRemoteDS>(() => _i255.AuthRemoteDS());
     gh.lazySingleton<_i794.INetworkManagerRepository>(
@@ -75,7 +74,7 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i462.INetworkManagerRepository>(),
           gh<_i737.ISPRouterService>(),
         ));
-    gh.factory<_i495.IAuthRepository>(() => _i495.AuthRepository(
+    gh.lazySingleton<_i495.IAuthRepository>(() => _i495.AuthRepository(
           gh<_i255.IAuthRemoteDS>(),
           gh<_i343.IAuthLocalDS>(),
         ));
@@ -89,6 +88,8 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.factory<_i34.ILocalizationRepository>(
         () => _i34.LocalizationRepository(gh<_i108.ILocalizationRemoteDS>()));
+    gh.factory<_i815.AuthBloc>(
+        () => _i815.AuthBloc(gh<_i495.IAuthRepository>()));
     gh.factory<_i623.LocalizationBloc>(
         () => _i623.LocalizationBloc(gh<_i34.ILocalizationRepository>()));
     return this;
